@@ -73,6 +73,7 @@ class LLMBackend:
                 model=self.model_name,
                 temperature=temperature,
                 api_key=os.environ[api_key_label],
+                api_base=os.environ.get("OPENAI_BASE_URL", None),
             )
 
 
