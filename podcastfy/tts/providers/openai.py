@@ -1,8 +1,13 @@
 """OpenAI TTS provider implementation."""
 
 import openai
+from openai import OpenAI
 from typing import List, Optional
 from ..base import TTSProvider
+import logging
+import os
+
+logger = logging.getLogger(__name__)
 
 class OpenAITTS(TTSProvider):
     """OpenAI Text-to-Speech provider."""
@@ -31,12 +36,22 @@ class OpenAITTS(TTSProvider):
     def generate_audio(self, text: str, voice: str, model: str, voice2: str = None) -> bytes:
         """Generate audio using OpenAI API."""
         self.validate_parameters(text, voice, model)
+        timeout = int(os.getenv('OPENAI_API_TTS_TIMEOUT', 3600))
+        voice_as_model = os.getenv('OPENAI_TTS_VOICE_AS_MODEL', None)
+        logger.info(f"timeout {timeout}, voice_as_model {voice_as_model}")
+        if voice_as_model:
+            extra_body = {"backend": model}
+            model = voice
+        else:
+            extra_body = {}    
         
+        client = OpenAI(timeout=timeout)
         try:
-            response = openai.audio.speech.create(
+            response = client.audio.speech.create(
                 model=model,
                 voice=voice,
-                input=text
+                input=text,
+                extra_body=extra_body
             )
             return response.content
         except Exception as e:

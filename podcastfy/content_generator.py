@@ -11,7 +11,7 @@ from typing import Optional, Dict, Any, List
 import re
 
 
-from langchain_community.chat_models import ChatLiteLLM
+from langchain_community.chat_models import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.llms.llamafile import Llamafile
 from langchain_core.prompts import ChatPromptTemplate
@@ -44,6 +44,7 @@ class LLMBackend:
                 max_output_tokens (int): The maximum number of output tokens.
                 model_name (str): The name of the model to use.
         """
+
         self.is_local = is_local
         self.temperature = temperature
         self.max_output_tokens = max_output_tokens
@@ -69,11 +70,14 @@ class LLMBackend:
                 **common_params,
             )
         else:  # user should set api_key_label from input
-            self.llm = ChatLiteLLM(
+            timeout = int(os.getenv('OPENAI_API_CHAT_TIMEOUT', 3600))
+            logger.info(f"OPENAI_API_CHAT_TIMEOUT {timeout}")
+            self.llm = ChatOpenAI(
                 model=self.model_name,
                 temperature=temperature,
                 api_key=os.environ[api_key_label],
-                api_base=os.environ.get("OPENAI_BASE_URL", None),
+                verbose=True,
+                timeout=timeout,
             )
 
 
@@ -413,8 +417,15 @@ class StandardContentStrategy(ContentGenerationStrategy, ContentCleanerMixin):
                 prompt_params: Dict[str, Any],
                 **kwargs) -> str:
         """Generate standard-length content."""
+        #if not self.llm.streaming:
         return chain.invoke(prompt_params)
-        
+        #else:
+        #    text = ''
+        #    for chunk in chain.stream(prompt_params):
+        #        print(chunk.content, end='', flush=True)
+        #        text += chunk.content
+        #    return text    
+
     def clean(self, 
              response: str,
              config: Dict[str, Any]) -> str:
@@ -889,13 +900,16 @@ class ContentGenerator:
                 input_texts,
                 prompt_params
             )
+            
+            logger.debug(f"Generated response {self.response}")
 
             # Clean response using the same strategy
             self.response = strategy.clean(
                 self.response,
                 self.content_generator_config
             )
-                
+
+            logger.debug(f"Cleaned response {self.response}")    
             logger.info(f"Content generated successfully")
 
             # Save output if requested

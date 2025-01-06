@@ -36,12 +36,17 @@ text_to_speech:
 #      question: "echo"
 #      answer: "shimmer"
 #    model: "tts-1-hd"
-  # local tts api
+# local tts api
+#  openai:
+#    default_voices:
+#      question: "v2/en_speaker_4" # female 4-6
+#      answer: "v2/en_speaker_1" # male 1-3
+#    model: "bark-cpp-small"
   openai:
     default_voices:
-      question: "v2/en_speaker_4" # female 4-6
-      answer: "v2/en_speaker_1" # male 1-3
-    model: "bark-cpp-small"
+      question: "en-us-ljspeech-high.onnx"
+      answer: "en-us-ryan-high.onnx"
+    model: "piper"  
   edge:
     default_voices:
       question: "en-US-JennyNeural"
@@ -55,6 +60,6 @@ text_to_speech:
       question: "R"
       answer: "S"
       model: "en-US-Studio-MultiSpeaker"
-  audio_format: "mp3"
+  audio_format: "wav"
   temp_audio_dir: "data/audio/tmp/"
   ending_message: "Bye Bye!"

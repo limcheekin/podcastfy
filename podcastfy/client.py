@@ -316,6 +316,8 @@ def generate_podcast(
         # Load default config
         default_config = load_config()
 
+        print("default config", default_config.config)
+
         # Update config if provided
         if config:
             if isinstance(config, dict):

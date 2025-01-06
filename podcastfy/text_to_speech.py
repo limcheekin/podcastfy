@@ -172,7 +172,7 @@ class TextToSpeech:
                 with open(temp_file, "wb") as f:
                     f.write(audio_data)
                 audio_files.append(temp_file)
-
+        print(f"Generated audio segments:\n{audio_files}")
         return audio_files
 
     def _merge_audio_files(self, audio_files: List[str], output_file: str) -> None:
