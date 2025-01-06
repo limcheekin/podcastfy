@@ -54,14 +54,14 @@ def generate_and_embed_podcast(**kwargs):
     Generates a podcast and embeds it in the notebook.
     """
     print(kwargs)
+    transcript_only = kwargs.pop('transcript_only', False)
     transcript_file = generate_podcast(
         llm_model_name='llama-3.2-3b-instruct-q4_k_m', 
         api_key_label="OPENAI_API_KEY",
         transcript_only=True,
         **kwargs
     )
-    print(transcript_file)
-    if kwargs.get('transcript_only'):
+    if transcript_only:
         return transcript_file
     else:    
         audio_file = generate_podcast(
