@@ -42,11 +42,16 @@ text_to_speech:
 #      question: "v2/en_speaker_4" # female 4-6
 #      answer: "v2/en_speaker_1" # male 1-3
 #    model: "bark-cpp-small"
+#  openai:
+#    default_voices:
+#      question: "en-us-ljspeech-high.onnx"
+#      answer: "en-us-ryan-high.onnx"
+#    model: "piper"  
   openai:
     default_voices:
-      question: "en-us-ljspeech-high.onnx"
-      answer: "en-us-ryan-high.onnx"
-    model: "piper"  
+      question: "af"
+      answer: "am_michael"
+    model: "kokoro"  
   edge:
     default_voices:
       question: "en-US-JennyNeural"
@@ -62,4 +67,4 @@ text_to_speech:
       model: "en-US-Studio-MultiSpeaker"
   audio_format: "wav"
   temp_audio_dir: "data/audio/tmp/"
-  ending_message: "Bye Bye!"
+  ending_message: "Bye... Bye!"
