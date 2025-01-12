@@ -41,10 +41,10 @@ class OpenAITTS(TTSProvider):
         base_url = os.getenv('OPENAI_TTS_BASE_URL', None)
         logger.info(f"timeout {timeout}, voice_as_model {voice_as_model}")
         if voice_as_model:
-            extra_body = {"backend": model}
+            extra_body = {"backend": model, "stream": False}
             model = voice
         else:
-            extra_body = {}    
+            extra_body = {"stream": False}    
         
         client = OpenAI(timeout=timeout, base_url=base_url)
 
@@ -53,6 +53,7 @@ class OpenAITTS(TTSProvider):
                 model=model,
                 voice=voice,
                 input=text,
+                response_format="wav",
                 extra_body=extra_body
             )
             return response.content
