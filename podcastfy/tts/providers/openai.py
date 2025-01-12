@@ -38,6 +38,7 @@ class OpenAITTS(TTSProvider):
         self.validate_parameters(text, voice, model)
         timeout = int(os.getenv('OPENAI_API_TTS_TIMEOUT', 3600))
         voice_as_model = os.getenv('OPENAI_TTS_VOICE_AS_MODEL', None)
+        base_url = os.getenv('OPENAI_TTS_BASE_URL', None)
         logger.info(f"timeout {timeout}, voice_as_model {voice_as_model}")
         if voice_as_model:
             extra_body = {"backend": model}
@@ -45,7 +46,8 @@ class OpenAITTS(TTSProvider):
         else:
             extra_body = {}    
         
-        client = OpenAI(timeout=timeout)
+        client = OpenAI(timeout=timeout, base_url=base_url)
+
         try:
             response = client.audio.speech.create(
                 model=model,
