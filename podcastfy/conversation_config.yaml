@@ -67,4 +67,4 @@ text_to_speech:
       model: "en-US-Studio-MultiSpeaker"
   audio_format: "wav"
   temp_audio_dir: "data/audio/tmp/"
-  ending_message: "Bye... Bye!"
+  ending_message: "Bye...!"
